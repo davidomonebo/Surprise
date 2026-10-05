@@ -1,0 +1,817 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Will You Go On A Date With Me?</title>
+
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap');
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      min-height: 100vh;
+      font-family: "DM Sans", sans-serif;
+      color: #43152b;
+      overflow-x: hidden;
+      background:
+        radial-gradient(circle at 10% 20%, rgba(255, 180, 211, .35), transparent 25%),
+        radial-gradient(circle at 90% 80%, rgba(205, 180, 255, .25), transparent 25%),
+        #fff5f8;
+    }
+
+    button,
+    input,
+    select {
+      font: inherit;
+    }
+
+    /* Floating decorations */
+
+    .decorations {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      overflow: hidden;
+      z-index: 0;
+    }
+
+    .float {
+      position: absolute;
+      opacity: .45;
+      animation: floatAround 6s ease-in-out infinite;
+    }
+
+    .f1 { top: 8%; left: 8%; font-size: 28px; }
+    .f2 { top: 15%; right: 12%; font-size: 22px; animation-delay: 1s; }
+    .f3 { bottom: 15%; left: 13%; font-size: 25px; animation-delay: 2s; }
+    .f4 { bottom: 10%; right: 10%; font-size: 30px; animation-delay: 3s; }
+    .f5 { top: 45%; left: 4%; font-size: 18px; animation-delay: 1.5s; }
+    .f6 { top: 55%; right: 5%; font-size: 20px; animation-delay: 2.5s; }
+
+    @keyframes floatAround {
+      0%, 100% {
+        transform: translateY(0) rotate(0deg);
+      }
+
+      50% {
+        transform: translateY(-18px) rotate(8deg);
+      }
+    }
+
+    /* App */
+
+    #app {
+      position: relative;
+      z-index: 2;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 30px 18px;
+    }
+
+    .screen {
+      width: 100%;
+      max-width: 570px;
+      animation: screenIn .55s ease;
+    }
+
+    @keyframes screenIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px) scale(.98);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    .card {
+      background: rgba(255, 255, 255, .94);
+      border: 1px solid rgba(255, 160, 193, .25);
+      border-radius: 30px;
+      padding: 48px 40px;
+      box-shadow:
+        0 25px 70px rgba(117, 35, 73, .12),
+        0 5px 20px rgba(117, 35, 73, .05);
+      text-align: center;
+    }
+
+    .emoji {
+      width: 82px;
+      height: 82px;
+      margin: 0 auto 24px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #fff0f5;
+      font-size: 42px;
+      box-shadow: 0 8px 25px rgba(194, 65, 116, .12);
+    }
+
+    h1 {
+      font-family: "Playfair Display", serif;
+      font-size: clamp(34px, 7vw, 52px);
+      line-height: 1.08;
+      color: #54132f;
+      margin-bottom: 18px;
+    }
+
+    h2 {
+      font-family: "Playfair Display", serif;
+      font-size: clamp(30px, 6vw, 43px);
+      line-height: 1.12;
+      color: #54132f;
+      margin-bottom: 15px;
+    }
+
+    p {
+      color: #805268;
+      font-size: 16px;
+      line-height: 1.7;
+    }
+
+    .subtitle {
+      max-width: 430px;
+      margin: 0 auto 30px;
+    }
+
+    /* Buttons */
+
+    .buttons {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 14px;
+      margin-top: 28px;
+      min-height: 58px;
+      position: relative;
+    }
+
+    .btn {
+      border: none;
+      border-radius: 15px;
+      padding: 15px 27px;
+      font-weight: 700;
+      cursor: pointer;
+      transition:
+        transform .2s ease,
+        box-shadow .2s ease,
+        background .2s ease;
+    }
+
+    .btn:hover {
+      transform: translateY(-3px);
+    }
+
+    .btn:active {
+      transform: scale(.96);
+    }
+
+    .yes-btn {
+      color: white;
+      background: linear-gradient(135deg, #e82d76, #bd2869);
+      box-shadow: 0 10px 25px rgba(218, 40, 108, .25);
+    }
+
+    .yes-btn:hover {
+      box-shadow: 0 14px 30px rgba(218, 40, 108, .35);
+    }
+
+    .no-btn {
+      color: white;
+      background: #8b5b9e;
+      position: relative;
+    }
+
+    .primary {
+      width: 100%;
+      margin-top: 25px;
+      color: white;
+      background: linear-gradient(135deg, #e82d76, #bd2869);
+      box-shadow: 0 12px 25px rgba(218, 40, 108, .22);
+    }
+
+    .secondary {
+      width: 100%;
+      margin-top: 12px;
+      color: #8c4565;
+      background: #fff0f5;
+    }
+
+    .footer {
+      margin-top: 28px;
+      font-size: 13px;
+      color: #ad718c;
+    }
+
+    /* Form */
+
+    .form {
+      text-align: left;
+      margin-top: 30px;
+    }
+
+    .field {
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 9px;
+      font-weight: 700;
+      color: #5b2340;
+      font-size: 14px;
+    }
+
+    input,
+    select {
+      width: 100%;
+      border: 1px solid #f0cbd9;
+      background: #fff9fb;
+      color: #54203b;
+      border-radius: 14px;
+      padding: 15px;
+      outline: none;
+      transition: .2s ease;
+    }
+
+    input:focus,
+    select:focus {
+      border-color: #df5c91;
+      box-shadow: 0 0 0 4px rgba(223, 92, 145, .1);
+    }
+
+    /* Payment joke */
+
+    .agreement {
+      margin-top: 28px;
+      padding: 22px;
+      border: 1px dashed #e9a2bd;
+      border-radius: 18px;
+      background: #fff8fa;
+      text-align: left;
+    }
+
+    .agreement-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+      align-items: flex-start;
+    }
+
+    .agreement-title {
+      font-weight: 800;
+      color: #571b38;
+      font-size: 17px;
+    }
+
+    .price {
+      font-family: "Playfair Display", serif;
+      font-size: 27px;
+      font-weight: 700;
+      color: #c32668;
+    }
+
+    .agreement small {
+      display: block;
+      margin-top: 7px;
+      color: #a56b85;
+      line-height: 1.5;
+    }
+
+    /* Success */
+
+    .success-icon {
+      width: 95px;
+      height: 95px;
+      margin: 0 auto 25px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      background: #fff0f6;
+      font-size: 48px;
+      animation: pop .6s ease;
+    }
+
+    @keyframes pop {
+      0% {
+        transform: scale(.3);
+      }
+
+      70% {
+        transform: scale(1.1);
+      }
+
+      100% {
+        transform: scale(1);
+      }
+    }
+
+    .booking {
+      margin-top: 24px;
+      padding: 18px;
+      border-radius: 16px;
+      background: #fff1f6;
+      color: #682441;
+      font-weight: 700;
+    }
+
+    /* Confetti */
+
+    .confetti {
+      position: fixed;
+      top: -20px;
+      z-index: 10;
+      pointer-events: none;
+      animation: fall 3s linear forwards;
+    }
+
+    @keyframes fall {
+      to {
+        transform:
+          translateY(110vh)
+          rotate(720deg);
+        opacity: 0;
+      }
+    }
+
+    /* Mobile */
+
+    @media (max-width: 600px) {
+      #app {
+        padding: 18px 14px;
+      }
+
+      .card {
+        padding: 35px 23px;
+        border-radius: 24px;
+      }
+
+      h1 {
+        font-size: 38px;
+      }
+
+      h2 {
+        font-size: 33px;
+      }
+
+      .buttons {
+        gap: 10px;
+      }
+
+      .btn {
+        padding: 14px 20px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Floating background decorations -->
+  <div class="decorations">
+    <div class="float f1">🌸</div>
+    <div class="float f2">♡</div>
+    <div class="float f3">✦</div>
+    <div class="float f4">🌷</div>
+    <div class="float f5">♡</div>
+    <div class="float f6">✿</div>
+  </div>
+
+  <main id="app"></main>
+
+  <script>
+    /* =========================
+       APP STATE
+    ========================= */
+
+    let selectedDate = "";
+    let selectedTime = "";
+
+    const app = document.getElementById("app");
+
+
+    /* =========================
+       SCREEN RENDERER
+    ========================= */
+
+    function render(html) {
+      app.innerHTML = `
+        <section class="screen">
+          <div class="card">
+            ${html}
+          </div>
+        </section>
+      `;
+    }
+
+
+    /* =========================
+       HOME SCREEN
+    ========================= */
+
+    function homeScreen() {
+      render(`
+        <div class="emoji">🌸</div>
+
+        <h1>
+          Will you go on<br>
+          a date with me?
+        </h1>
+
+        <p class="subtitle">
+          I have a very important question to ask you...
+          and please think carefully before answering 😭
+        </p>
+
+        <div class="buttons">
+          <button class="btn yes-btn" onclick="yayScreen()">
+            YES 💗
+          </button>
+
+          <button
+            class="btn no-btn"
+            id="noButton"
+            onmouseenter="runAway()"
+            ontouchstart="runAway()"
+            onclick="runAway()"
+          >
+            NO 🥺
+          </button>
+        </div>
+
+        <div class="footer">
+          made with questionable amounts of courage 💌
+        </div>
+      `);
+    }
+
+
+    /* =========================
+       NO BUTTON
+    ========================= */
+
+    let noAttempts = 0;
+
+    function runAway() {
+      const button = document.getElementById("noButton");
+
+      if (!button) return;
+
+      noAttempts++;
+
+      const messages = [
+        "NO 🥺",
+        "Are you sure? 😭",
+        "Try again 😂",
+        "Nice try 😭",
+        "You can't escape 💀",
+        "NOPE 😂",
+        "Just say YES 💗"
+      ];
+
+      button.textContent =
+        messages[Math.min(noAttempts, messages.length - 1)];
+
+      const x = Math.random() * 180 - 90;
+      const y = Math.random() * 100 - 50;
+
+      button.style.transform =
+        `translate(${x}px, ${y}px) rotate(${Math.random() * 10 - 5}deg)`;
+    }
+
+
+    /* =========================
+       YES SCREEN
+    ========================= */
+
+    function yayScreen() {
+      createConfetti();
+
+      render(`
+        <div class="emoji">😭💗</div>
+
+        <h2>
+          WAIT... YOU<br>
+          ACTUALLY SAID YES??
+        </h2>
+
+        <p class="subtitle">
+          I was fully prepared for rejection 😂
+          <br><br>
+          Okay, now we have to actually plan this thing.
+        </p>
+
+        <button class="btn primary" onclick="dateScreen()">
+          okay okay! →
+        </button>
+
+        <button class="btn secondary" onclick="homeScreen()">
+          wait... go back 😭
+        </button>
+      `);
+    }
+
+
+    /* =========================
+       DATE SCREEN
+    ========================= */
+
+    function dateScreen() {
+      render(`
+        <div class="emoji">📅</div>
+
+        <h2>
+          So... when are<br>
+          you free?
+        </h2>
+
+        <p>
+          Let's make this official.
+        </p>
+
+        <div class="form">
+
+          <div class="field">
+            <label for="date">
+              Pick a day 📅
+            </label>
+
+            <input
+              id="date"
+              type="date"
+              min="${getToday()}"
+            />
+          </div>
+
+          <div class="field">
+            <label for="time">
+              What time? ⏰
+            </label>
+
+            <select id="time">
+              <option value="">
+                Select a time
+              </option>
+              <option>12:00 PM</option>
+              <option>12:30 PM</option>
+              <option>1:00 PM</option>
+              <option>1:30 PM</option>
+              <option>2:00 PM</option>
+              <option>2:30 PM</option>
+              <option>3:00 PM</option>
+              <option>3:30 PM</option>
+              <option>4:00 PM</option>
+              
+            </select>
+          </div>
+
+          <button
+            class="btn primary"
+            onclick="confirmDate()"
+          >
+            set the date! 💗
+          </button>
+
+          <button
+            class="btn secondary"
+            onclick="yayScreen()"
+          >
+            ← go back
+          </button>
+
+        </div>
+      `);
+    }
+
+
+    function getToday() {
+      const today = new Date();
+
+      const year = today.getFullYear();
+      const month = String(today.getMonth() + 1).padStart(2, "0");
+      const day = String(today.getDate()).padStart(2, "0");
+
+      return `${year}-${month}-${day}`;
+    }
+
+
+    /* =========================
+       CONFIRM DATE
+    ========================= */
+
+    function confirmDate() {
+      const dateInput = document.getElementById("date");
+      const timeInput = document.getElementById("time");
+
+      if (!dateInput.value || !timeInput.value) {
+        alert("Please choose both a date and time 💗");
+        return;
+      }
+
+      selectedDate = dateInput.value;
+      selectedTime = timeInput.value;
+
+      paywallScreen();
+    }
+
+
+    /* =========================
+       FAKE PAYMENT SCREEN
+    ========================= */
+
+    function paywallScreen() {
+      render(`
+        <div class="emoji">💳</div>
+
+        <h2>
+          One small fee...
+        </h2>
+
+        <p class="subtitle">
+          To officially confirm your acceptance of this date,
+          please complete the following transaction.
+          <br><br>
+          Totally normal. Everyone does this.
+        </p>
+
+        <div class="agreement">
+
+          <div class="agreement-top">
+
+            <div>
+              <div class="agreement-title">
+                Date Agreement™
+              </div>
+
+              <small>
+                One-time fee • non-refundable •
+                absolutely worth it
+              </small>
+            </div>
+
+            <div class="price">
+              $499
+            </div>
+
+          </div>
+
+        </div>
+
+        <button
+          class="btn primary"
+          onclick="fakePayment()"
+        >
+          pay $499 & confirm 💳
+        </button>
+
+        <button
+          class="btn secondary"
+          onclick="dateScreen()"
+        >
+          ← wait, let me change it
+        </button>
+      `);
+    }
+
+
+    /* =========================
+       FAKE PAYMENT SUCCESS
+    ========================= */
+
+    function fakePayment() {
+      createConfetti();
+
+      const formattedDate =
+        formatDate(selectedDate);
+
+      render(`
+        <div class="success-icon">
+          💗
+        </div>
+
+        <h2>
+          HAHAHA! 😭
+        </h2>
+
+        <p class="subtitle">
+          You thought I was actually
+          charging you $499? 😂
+        </p>
+
+        <p>
+          There is absolutely no payment.
+          <br>
+          I just wanted to see how far you'd go.
+        </p>
+
+        <div class="booking">
+          📅 ${formattedDate}
+          <br><br>
+          ⏰ ${selectedTime}
+          <br><br>
+          💗 DATE OFFICIALLY BOOKED
+        </div>
+
+        <button
+          class="btn primary"
+          onclick="homeScreen()"
+        >
+          start over ↩
+        </button>
+      `);
+    }
+
+
+    /* =========================
+       DATE FORMATTER
+    ========================= */
+
+    function formatDate(dateString) {
+      const date = new Date(dateString + "T00:00:00");
+
+      return date.toLocaleDateString(
+        "en-US",
+        {
+          weekday: "long",
+          month: "long",
+          day: "numeric",
+          year: "numeric"
+        }
+      );
+    }
+
+
+    /* =========================
+       CONFETTI
+    ========================= */
+
+    function createConfetti() {
+
+      const symbols = [
+        "💗",
+        "💕",
+        "🌸",
+        "🌷",
+        "✨",
+        "💖",
+        "♡"
+      ];
+
+      for (let i = 0; i < 35; i++) {
+
+        const confetti =
+          document.createElement("div");
+
+        confetti.className = "confetti";
+
+        confetti.textContent =
+          symbols[
+            Math.floor(
+              Math.random() * symbols.length
+            )
+          ];
+
+        confetti.style.left =
+          Math.random() * 100 + "vw";
+
+        confetti.style.fontSize =
+          Math.random() * 18 + 12 + "px";
+
+        confetti.style.animationDuration =
+          Math.random() * 2 + 2 + "s";
+
+        confetti.style.animationDelay =
+          Math.random() * .5 + "s";
+
+        document.body.appendChild(confetti);
+
+        setTimeout(() => {
+          confetti.remove();
+        }, 4000);
+      }
+    }
+
+
+    /* =========================
+       START APP
+    ========================= */
+
+    homeScreen();
+
+  </script>
+
+</body>
+</html>
